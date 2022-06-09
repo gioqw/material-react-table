@@ -344,6 +344,7 @@ export type MaterialReactTableProps<D extends Record<string, any> = {}> =
     enableClickToCopy?: boolean;
     enableColumnActions?: boolean;
     enableColumnOrdering?: boolean;
+    enableColumnVirtualization?: boolean;
     enableDensePaddingToggle?: boolean;
     enableEditing?: boolean;
     enableExpandAll?: boolean;

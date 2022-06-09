@@ -13,34 +13,7 @@ const meta: Meta = {
 
 export default meta;
 
-const shortColumns: MRT_ColumnDef[] = [
-  {
-    header: 'First Name',
-    id: 'firstName',
-  },
-  {
-    header: 'Last Name',
-    id: 'lastName',
-  },
-  {
-    header: 'Email Address',
-    id: 'email',
-  },
-  {
-    header: 'Address',
-    id: 'address',
-  },
-  {
-    header: 'City',
-    id: 'city',
-  },
-  {
-    header: 'State',
-    id: 'state',
-  },
-];
-
-const longColumns: MRT_ColumnDef[] = [
+const columns: MRT_ColumnDef[] = [
   {
     header: 'First Name',
     id: 'firstName',
@@ -95,16 +68,7 @@ const longColumns: MRT_ColumnDef[] = [
   },
 ];
 
-const shortData = [...Array(500)].map((_) => ({
-  firstName: faker.name.firstName(),
-  lastName: faker.name.lastName(),
-  email: faker.internet.email(),
-  address: faker.address.streetAddress(),
-  city: faker.address.city(),
-  state: faker.address.state(),
-}));
-
-const longData = [...Array(500)].map((_) => ({
+const data = [...Array(5000)].map((_) => ({
   firstName: faker.name.firstName(),
   middleName: faker.name.firstName(),
   lastName: faker.name.lastName(),
@@ -120,12 +84,26 @@ const longData = [...Array(500)].map((_) => ({
   petName: faker.animal.cat(),
 }));
 
+const longColumns = [...Array(100)].map((_, index) => {
+  const id = index.toString();
+  return {
+    header: id,
+    id,
+  };
+});
+
+const longData = [...Array(1000)].map((_) =>
+  Object.fromEntries(
+    longColumns.map((column) => [column.id, faker.datatype.number()]),
+  ),
+);
+
 export const VirtualizationDisabledDefault: Story<
   MaterialReactTableProps
 > = () => (
   <MaterialReactTable
-    columns={shortColumns}
-    data={shortData}
+    columns={columns}
+    data={data.slice(0, 200)}
     enablePagination={false}
     enableToolbarBottom={false}
   />
@@ -133,8 +111,31 @@ export const VirtualizationDisabledDefault: Story<
 
 export const EnableRowVirtualization: Story<MaterialReactTableProps> = () => (
   <MaterialReactTable
+    columns={columns}
+    data={data}
+    enablePagination={false}
+    enableRowVirtualization
+    enableToolbarBottom={false}
+  />
+);
+
+export const EnableColumnVirtualization: Story<
+  MaterialReactTableProps
+> = () => (
+  <MaterialReactTable
+    columns={longColumns}
+    data={longData.slice(0, 10)}
+    enableColumnVirtualization
+    enablePagination={false}
+    enableToolbarBottom={false}
+  />
+);
+
+export const EnableAllVirtualization: Story<MaterialReactTableProps> = () => (
+  <MaterialReactTable
     columns={longColumns}
     data={longData}
+    enableColumnVirtualization
     enablePagination={false}
     enableRowVirtualization
     enableToolbarBottom={false}

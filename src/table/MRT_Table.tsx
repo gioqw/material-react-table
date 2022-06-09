@@ -15,6 +15,7 @@ export const MRT_Table: FC<Props> = ({ tableContainerRef, tableInstance }) => {
     options: {
       enableColumnResizing,
       enableRowVirtualization,
+      enableColumnVirtualization,
       enableStickyHeader,
       enableTableFooter,
       enableTableHead,
@@ -33,11 +34,20 @@ export const MRT_Table: FC<Props> = ({ tableContainerRef, tableInstance }) => {
       {...tableProps}
       sx={{
         tableLayout:
-          enableColumnResizing || enableRowVirtualization ? 'fixed' : undefined,
+          enableColumnResizing ||
+          enableColumnVirtualization ||
+          enableRowVirtualization
+            ? 'fixed'
+            : undefined,
         ...tableProps?.sx,
       }}
     >
-      {enableTableHead && <MRT_TableHead tableInstance={tableInstance} />}
+      {enableTableHead && (
+        <MRT_TableHead
+          tableContainerRef={tableContainerRef}
+          tableInstance={tableInstance}
+        />
+      )}
       <MRT_TableBody
         tableContainerRef={tableContainerRef}
         tableInstance={tableInstance}

@@ -63,6 +63,7 @@ export const MRT_TableBody: FC<Props> = ({
             <MRT_TableBodyRow
               key={row.id}
               row={row}
+              tableContainerRef={tableContainerRef}
               tableInstance={tableInstance}
             />
           );
