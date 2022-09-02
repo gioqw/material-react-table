@@ -96,6 +96,7 @@
   "dependencies": {
     "@tanstack/match-sorter-utils": "8.1.1",
     "@tanstack/react-table": "8.5.13",
-    "react-virtual": "^2.10.4"
+    "react-virtual": "^2.10.4",
+    "zustand": "^4.1.1"
   }
 }

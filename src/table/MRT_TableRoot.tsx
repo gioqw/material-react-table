@@ -1,4 +1,5 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import create from 'zustand';
 import {
   TableState,
   getCoreRowModel,
@@ -36,6 +37,16 @@ import type {
   MaterialReactTableProps,
 } from '..';
 import { MRT_EditRowModal } from '../body/MRT_EditRowModal';
+
+export interface TableStore {
+  table: MRT_TableInstance;
+  setTable: (table: MRT_TableInstance) => void;
+}
+
+export const useTableStore = create<TableStore>((set) => ({
+  table: undefined as unknown as MRT_TableInstance,
+  setTable: (table) => set((_state: any) => ({ table })),
+}));
 
 export const MRT_TableRoot = <TData extends Record<string, any> = {}>(
   props: MaterialReactTableProps<TData>,
@@ -248,7 +259,7 @@ export const MRT_TableRoot = <TData extends Record<string, any> = {}>(
   );
 
   //@ts-ignore
-  const table = {
+  const tableInstance = {
     ...useReactTable({
       getCoreRowModel: getCoreRowModel(),
       getExpandedRowModel: getExpandedRowModel(),
@@ -309,9 +320,22 @@ export const MRT_TableRoot = <TData extends Record<string, any> = {}>(
     setShowGlobalFilter: props.onShowGlobalFilterChange ?? setShowGlobalFilter,
   } as MRT_TableInstance<TData>;
 
-  if (props.tableInstanceRef) {
-    props.tableInstanceRef.current = table;
-  }
+  const { table, setTable } = useTableStore((state) => ({
+    table: state.table,
+    setTable: state.setTable,
+  }));
+
+  useEffect(() => {
+    setTable(tableInstance as any);
+    if (props.tableInstanceRef) {
+      //@ts-ignore
+      props.tableInstanceRef.current = table;
+    }
+  }, []);
+
+  console.log({ table });
+
+  if (!table) return null;
 
   return (
     <>
@@ -325,9 +349,9 @@ export const MRT_TableRoot = <TData extends Record<string, any> = {}>(
         open={isFullScreen}
         transitionDuration={400}
       >
-        <MRT_TablePaper table={table as any} />
+        <MRT_TablePaper />
       </Dialog>
-      {!isFullScreen && <MRT_TablePaper table={table as any} />}
+      {!isFullScreen && <MRT_TablePaper />}
       {editingRow && props.editingMode === 'modal' && (
         <MRT_EditRowModal row={editingRow as any} table={table} open />
       )}

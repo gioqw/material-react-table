@@ -3,18 +3,26 @@ import { Paper } from '@mui/material';
 import { MRT_TopToolbar } from '../toolbar/MRT_TopToolbar';
 import { MRT_BottomToolbar } from '../toolbar/MRT_BottomToolbar';
 import { MRT_TableContainer } from './MRT_TableContainer';
-import type { MRT_TableInstance } from '..';
+import { useTableStore } from './MRT_TableRoot';
 
 interface Props {
-  table: MRT_TableInstance;
+  // table: MRT_TableInstance;
 }
 
-export const MRT_TablePaper: FC<Props> = ({ table }) => {
+export const MRT_TablePaper: FC<Props> = () => {
   const {
-    getState,
-    options: { enableBottomToolbar, enableTopToolbar, muiTablePaperProps },
-  } = table;
-  const { isFullScreen } = getState();
+    isFullScreen,
+    enableBottomToolbar,
+    enableTopToolbar,
+    muiTablePaperProps,
+    table,
+  } = useTableStore((state) => ({
+    isFullScreen: state.table.getState().isFullScreen,
+    enableBottomToolbar: state.table.options.enableBottomToolbar,
+    enableTopToolbar: state.table.options.enableTopToolbar,
+    muiTablePaperProps: state.table.options.muiTablePaperProps,
+    table: state.table,
+  }));
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
